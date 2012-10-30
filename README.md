@@ -8,6 +8,10 @@
 +    Seperated server to app server and web server.
 +    Fixed a bug which related to uploading empty directory to github.
     
+## AWS DEMO
+
+    A online demo can be found here[http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/](http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/);
+
 ## Description
     This demo is based on a jQuery plug-in called "jQuery-File-Upload". 
     Two servers needed app server app.js, web server web.js. Web server used express frame work.
