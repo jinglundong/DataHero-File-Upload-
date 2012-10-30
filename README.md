@@ -44,7 +44,7 @@
      It's a O(n(logk)) (where k=5) algorithm.
 
 ## Git
-    </p>[Repository](https://github.com/jinglundong/DataHero-File-Upload-.git)<p>
++    Ropository can be found [here](https://github.com/jinglundong/DataHero-File-Upload-.git).
 
 ## License
 Released under the [MIT license](http://www.opensource.org/licenses/MIT).
