@@ -37,6 +37,7 @@
 +    The function which computes the line and word number of uploaded file is not completely asynchronized. 
 +    If multiple large file are uploaded at the same time, the progress bar may not fade out smoothly. 
      One possible reason is calculating number of lines and words leads to huge amount of CPU utilization and I/O for large file.
++    Must run on a Linux or Unix shell with wc command. Windows compatible will be added soon.
 +    Haven't finish the top 5 frequent words question. Planning to write a C/C++ code and use exec module to run it. 
      The algorithm is: scan the whole file and using a HashMap to save the frequency of words. 
      Iterate the HashMap and maintain a maxHeap with size 5 to track the top 5 words. 
