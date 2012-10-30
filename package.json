@@ -1,0 +1,43 @@
+{
+    "name": "DataHero-file-upload-demo",
+    "version": "0.0.5",
+    "title": "DataHero-file-upload-demo",
+    "description": "Node.js implementation example of a file upload handler for jQuery File Upload.",
+    "keywords": [
+        "file",
+        "upload",
+        "cross-domain",
+        "cross-site",
+        "node"
+    ],
+    "homepage": "https://github.com/jinglundong/DataHero-File-Upload-.git",
+    "author": {
+        "name": "Sebastian Tschan",
+        "modifier": "jinglun Dong",
+        "url": "jinglundong@gmail.com"
+    },
+    "maintainers": [
+        {
+            "name": "Jinglun Dong",
+            "url": "jinglundong@gmail.com"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jinglundong/DataHero-File-Upload-.git"
+    },
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "http://www.opensource.org/licenses/MIT"
+        }
+    ],
+    "dependencies": {
+        "formidable": ">=1.0.11",
+        "node-static": ">=0.6.2",
+        "imagemagick": ">=0.1.2",
+        "express": ">=3.0",
+        "ejs": ">=0.8.3"
+    },
+    "main": "app.js"
+}
