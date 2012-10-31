@@ -1,0 +1,1 @@
+{"name":"jquery-MIT-LICENSE.txt","size":1074,"type":"text/plain","delete_type":"DELETE","delete_url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/jquery-MIT-LICENSE.txt","url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/jquery-MIT-LICENSE.txt","line":20,"word":168}

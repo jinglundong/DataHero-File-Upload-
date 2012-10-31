@@ -1,0 +1,1 @@
+{"name":"jquery-GPL-LICENSE.txt","size":15099,"type":"text/plain","delete_type":"DELETE","delete_url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/jquery-GPL-LICENSE.txt","url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/jquery-GPL-LICENSE.txt","line":278,"word":2491}
