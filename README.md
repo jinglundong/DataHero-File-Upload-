@@ -1,13 +1,20 @@
-# DataHero File Upload Plugin
+# File Upload Demo
 
 ## Author 
     Jinglun Dong 
 
 ## Version
-+    v0.0.9 fixed a bug which crashes the server when different users delete files asynchronously. 
-+    Seperated server to app server and web server.
-+    Fixed a bug which related to uploading empty directory to github.
+
++    v0.1.1 If there is no file information update, there is no content reload on browse view.
++    v0.1.0 Added "delete button" back to browse view. Deactivate the ajax call when load index view first time. 
++    v0.0.9 Fixed a bug which crashes the server when different users delete files asynchronously. 
++    v0.0.8 Seperated server to app server and web server.
++    v0.0.7 Fixed a bug which related to uploading empty directory to github.
     
+## AWS DEMO
+
++    An online demo can be found here: [http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/](http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/);
+
 ## Description
     This demo is based on a jQuery plug-in called "jQuery-File-Upload". 
     Two servers needed app server app.js, web server web.js. Web server used express frame work.

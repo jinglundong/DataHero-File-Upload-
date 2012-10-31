@@ -21,7 +21,7 @@ $(function () {
   $('#fileupload').fileupload({
       // Uncomment the following to send cross-domain cookies:
       //xhrFields: {withCredentials: true},
-      url: 'http://ec2-107-22-110-147.compute-1.amazonaws.com:8888'
+      url: 'http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/'
   });
 
   // Enable iframe cross-domain access via redirect option:
@@ -33,30 +33,8 @@ $(function () {
           '/cors/result.html?%s'
       )
   );
-
-	
-	//  settings:
-	$('#fileupload').fileupload('option', {
-	    url: 'http://ec2-107-22-110-147.compute-1.amazonaws.com:8888',
-	    maxFileSize: 10*1024*1024*1024,  //10GB	    
-      acceptFileTypes: /(\.|\/)(txt)$/i,
-	    process: [
-		{
-		    action: 'load',
-		    fileTypes: /^image\/(gif|jpeg|png)$/,
-		    maxFileSize: 10*1024*1024*1024,  //10GB	 
-		},
-		{
-		    action: 'resize',
-		    maxWidth: 1440,
-		    maxHeight: 900
-		},
-		{
-		    action: 'save'
-		}
-	    ]
-	});
     
+    var fileInfo_local_copy=[{}];
     var ajaxCall = function() {
 	    $.ajax({
 	        // Uncomment the following to send cross-domain cookies:
@@ -64,12 +42,21 @@ $(function () {
 	        url: $('#fileupload').fileupload('option', 'url'),
 	        dataType: 'json',
 	        context: $('#fileupload')[0]
-	    }).done(function (result) {	        
-            $('.files').children().remove();
+	    }).done(function (result) {	             
             if (result && result.length) {
-		    $(this).fileupload('option', 'done')
-		        .call(this, null, {result: result});
-	        }
+                //only refresh the table if server return a different JSON                             
+                if (JSON.stringify(result) !== JSON.stringify(fileInfo_local_copy)){                    
+                    $('.files').children().remove();
+                    fileInfo_local_copy = result;
+		            $(this).fileupload('option', 'done').call(this, null, {result: result});
+                }
+	        }         
+            else{
+                //empty result
+                if (!result.length){
+                    $('.files').children().remove();
+                }
+            }
 	    });
     };
     $(window).load(ajaxCall);
