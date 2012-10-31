@@ -5,7 +5,8 @@
 
 ## Version
 
-+    v0.1.0 Add delete button back to browse view. Deactivate the ajax on index view. 
++    v0.1.1 If there is no file information update, there is no content refresh on browse view.
++    v0.1.0 Added "delete button" back to browse view. Deactivate the ajax call when load index view first time. 
 +    v0.0.9 Fixed a bug which crashes the server when different users delete files asynchronously. 
 +    v0.0.8 Seperated server to app server and web server.
 +    Fixed a bug which related to uploading empty directory to github.
