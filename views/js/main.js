@@ -57,20 +57,4 @@ $(function () {
 	    ]
 	});
 
-    $(window).load(function(){                  
-        // Load existing files:
-        $.ajax({
-            // Uncomment the following to send cross-domain cookies:
-            //xhrFields: {withCredentials: true},       
-            url: $('#fileupload').fileupload('option', 'url'),
-            dataType: 'json',
-            context: $('#fileupload')[0]
-        }).done(function (result) {
-            $('.files').children().remove();
-            if (result && result.length) {
-	        $(this).fileupload('option', 'done')
-	            .call(this, null, {result: result});
-            }
-        });        
-    });            
 });
