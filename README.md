@@ -38,6 +38,7 @@
 +    For the dependency, please use "$npm install".
 +    Create an app server by "$node ./app.js".
 +    A web server is also needed, by "$node ./web.js".
++    Open [http://localhost:8080/](http://localhost:8080/)
 
 ## Problem not solved
 +    Only test on Chrome version 22.0.1229.79 and Firefox version 15.0.1.
