@@ -13,7 +13,7 @@
     
 ## AWS DEMO
 
-+    A online demo can be found here: [http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/](http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/);
++    An online demo can be found here: [http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/](http://ec2-107-22-110-147.compute-1.amazonaws.com:8080/);
 
 ## Description
     This demo is based on a jQuery plug-in called "jQuery-File-Upload". 
