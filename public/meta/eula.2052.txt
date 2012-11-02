@@ -1,1 +1,0 @@
-{"name":"eula.2052.txt","size":17734,"type":"text/plain","delete_type":"DELETE","delete_url":"http://localhost:8888/files/eula.2052.txt","url":"http://localhost:8888/files/eula.2052.txt","line":111,"word":1399}
