@@ -20,7 +20,7 @@
     'use strict';
     var path = require('path'),
         fs = require('fs'),
-        HashMap = require('hashmap').HashMap,
+        HashMap = require('./hashmap').HashMap,
         // Since Node 0.8, .existsSync() moved from path to fs:
         _existsSync = fs.existsSync || path.existsSync,
         formidable = require('formidable'),
