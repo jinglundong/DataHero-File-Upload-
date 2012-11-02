@@ -20,6 +20,7 @@
     'use strict';
     var path = require('path'),
         fs = require('fs'),
+        HashMap = require('hashmap').HashMap,
         // Since Node 0.8, .existsSync() moved from path to fs:
         _existsSync = fs.existsSync || path.existsSync,
         formidable = require('formidable'),
@@ -32,9 +33,9 @@
             uploadDir: __dirname + '/public/files',
             metadataDir: __dirname + '/public/meta',
             uploadUrl: '/files/',
-            maxPostSize: 1.1*1024*1024*1024, // 11 GB
+            maxPostSize: 1*1024*1024*1024, // 1 GB
             minFileSize: 1,
-            maxFileSize: 1*1024*1024*1024, // 10 GB
+            maxFileSize: 1*1024*1024*1024, // 1 GB
             acceptFileTypes: /\.+(txt)/i,
             // Files not matched by this regular expression force a download dialog,
             // to prevent executing any scripts in the context of the service domain:
@@ -73,8 +74,9 @@
             this.size = file.size;
             this.type = file.type;
             this.delete_type = 'DELETE';
-            this.line ;
-            this.word ;
+            this.line = 0;
+            this.word = 0;
+            this.topfive = [];
         },        
         UploadHandler = function (req, res, callback) {
             this.req = req;
@@ -214,6 +216,7 @@
                         fileInfo.line = meta.line;
                         fileInfo.word = meta.word;
                         fileInfo.initUrls(handler.req);
+                        fileInfo.topfive = meta.topfive;
                         files.push(fileInfo);
                         
                     });
@@ -222,7 +225,96 @@
             });
         });
     };
+
+    //maintain a min heap, Jinglun
+    function minHeapUpdate(heap){
+        for (var i = 0; i < heap.length/2; i++){
+            var iValue = heap[i].value,
+                leftValue = Number.MAX_VALUE,
+                rightValue = Number.MAX_VALUE;
+            if (i*2+1 < heap.length){
+                leftValue = heap[i*2+1].value;
+            }
+            if (i*2+2 < heap.length){
+                rightValue = heap[i*2+2].value;
+            }
+            if(heap[i].value > Math.min(leftValue, rightValue)){
+                var tmp = heap[i];
+                if (leftValue < rightValue){                            
+                    heap[i] = heap[i*2+1];
+                    heap[i*2+1] = tmp;
+                }
+                else{
+                    heap[i] = heap[i*2+2];
+                    heap[i*2+2] = tmp;
+                }
+            }
+        }
+    };
     
+    //Compute the line, word number and the top five frequent words
+    function computeMeta(fileServerPath, fileInfo, filesCount, files, handler){
+        fs.readFile(fileServerPath, 'utf8', function (err, data) {
+            if (err) throw err;
+            var dataSplited = data.split("\n");
+            fileInfo.line = dataSplited.length -1 ;
+            var words;         
+            var wordMap = new HashMap();
+            for (var i=0; i<dataSplited.length; i++){
+                words = dataSplited[i].match(/\w+\S+/g);
+                if (words){
+                    for (var j=0; j<words.length; j++){
+                        if (wordMap.get(words[j])){     //hit
+                            wordMap.set(words[j], wordMap.get(words[j])+1);
+                        }
+                        else{                       //word first appear
+                            wordMap.set(words[j], 1);
+                        }        
+                    }                    
+                    fileInfo.word += words.length;
+                }
+            }            
+            //use min heap to track the top five frequent words
+            var heap = [];
+            for (var rawWord in wordMap._data){
+                var word = rawWord.replace('"','');        
+                if (heap.length <5){            //has empty slot
+                    var pair = new Object();
+                    pair.word = word;
+                    pair.value = wordMap.get(word);
+                    heap.push(pair);
+                    minHeapUpdate(heap);        //maintain a min heap
+                }
+                else{
+                    if (wordMap.get(word) > heap[0].value){
+                        var pair = new Object();
+                        pair.word = word;
+                        pair.value = wordMap.get(word);
+                        heap[0] = pair;
+                        minHeapUpdate(heap);    //maintain a min heap
+                    }
+                }                                    
+            }
+            //push top five words to fileInfo
+            for (var i=0; i<heap.length; i++){
+                fileInfo.topfive.push(heap[i].word.replace(/\u0000/g,''));
+            }
+            fs.writeFile(options.metadataDir + '/' + fileInfo.name, 
+                        JSON.stringify(fileInfo), function (err) {
+                    if (err) throw err;                                            
+                    });
+            console.log("line:" + fileInfo.line + " word:" + fileInfo.word + " topfive:" +
+            JSON.stringify(fileInfo.topfive));
+            filesCount--;   
+            if (filesCount === 0){          //all uploaded files finish computing metadata.
+                //A better solution is to call handler.callback just after all file upload finish. 
+                //Add an other handler to deal with the calculated line and word is necessary if file is large. 
+                handler.callback(files, false);    
+             }   
+        })
+        
+    };
+
     //Modified by Jinglun
     UploadHandler.prototype.post = function () {
         var handler = this,
@@ -237,43 +329,11 @@
                 var filesCount = files.length;
                 if (!counter) {
                     files.forEach(function(fileInfo){   
-                        fileInfo.initUrls(handler.req);                 
-                        //Run Linux shell "wc" to count lines and words.
+                        fileInfo.initUrls(handler.req);                                        
                         var fileServerPath =  options.uploadDir + '/' + fileInfo.name;
-                        //use " " to deal with the space in the file names
-                        exec('wc ' + '"' + fileServerPath + '"', function (error, stdout, stderr) {               
-                            var splitedStdout = stdout.split(" ");
-                            var lineFlag = false;
-                            for (var i=0; i!=splitedStdout.length;i++){
-                                if (splitedStdout[i]){
-                                    if (!lineFlag){         //get the line count
-                                        fileInfo.line= parseInt(splitedStdout[i],10);                          
-                                        lineFlag = true;
-                                    }
-                                    else{                   //get the word count
-                                        fileInfo.word = parseInt(splitedStdout[i],10); 
-                                        //write to file asynchronously
-                                        fs.writeFile(options.metadataDir + '/' + fileInfo.name, 
-                                            JSON.stringify(fileInfo), function (err) {
-                                            if (err) throw err;                                            
-                                        });
-                                        console.log("line:" + fileInfo.line + " word:" + fileInfo.word);
-                                        filesCount--;    
-                                        //I shouldn't block here. 
-                                        //But I haven't find a proper and easy way to update the content asynchronously.
-                                        //I used console to test the performance of asynchronous way, and it is much more smooth for large file.
-                                        if (filesCount === 0){      
-                                            handler.callback(files, false);
-                                         }                  
-                                        break;  
-                                    }                      
-                                }
-                            }                                                                                
-                        });
-                        //A better solution is to call handler.callback just after all file upload finish. 
-                        //Dealing with the calculated line and word separately is necessary if file is large. 
-                        //But no time to implement it for now.
-                        //handler.callback(files, redirect);          (<-here is the the asynchronous solution.)       
+                        computeMeta(fileServerPath, fileInfo, filesCount, 
+                            files, handler);                                                                                        
+                        //handler.callback(files, redirect);          (<-here is the the optimal asynchronous solution.)       
                     });                    
                 }
             };
@@ -297,22 +357,25 @@
                 return;
             }
             fs.renameSync(file.path, options.uploadDir + '/' + fileInfo.name); 
-            fs.writeFile(options.metadataDir + '/' + fileInfo.name, JSON.stringify(fileInfo), function(err){
-                if (err) throw err;
-            });
-            if (options.imageTypes.test(fileInfo.name)) {
-                Object.keys(options.imageVersions).forEach(function (version) {
-                    counter += 1;
-                    var opts = options.imageVersions[version];
-                    imageMagick.resize({
-                        width: opts.width,
-                        height: opts.height,
-                        srcPath: options.uploadDir + '/' + fileInfo.name,
-                        dstPath: options.uploadDir + '/' + version + '/' +
-                            fileInfo.name
-                    }, finish());
+             //Check if directory exsit.
+            fs.mkdir(options.metadataDir, function(){
+                fs.writeFile(options.metadataDir + '/' + fileInfo.name, JSON.stringify(fileInfo), function(err){
+                    if (err) throw err;
                 });
-            }
+                if (options.imageTypes.test(fileInfo.name)) {
+                    Object.keys(options.imageVersions).forEach(function (version) {
+                        counter += 1;
+                        var opts = options.imageVersions[version];
+                        imageMagick.resize({
+                            width: opts.width,
+                            height: opts.height,
+                            srcPath: options.uploadDir + '/' + fileInfo.name,
+                            dstPath: options.uploadDir + '/' + version + '/' +
+                                fileInfo.name
+                        }, finish());
+                    });
+                }
+            });
 
         }).on('aborted', function () {
             tmpFiles.forEach(function (file) {

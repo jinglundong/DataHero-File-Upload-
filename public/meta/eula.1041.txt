@@ -1,1 +1,0 @@
-{"name":"eula.1041.txt","size":118,"type":"text/plain","delete_type":"DELETE","delete_url":"http://localhost:8888/files/eula.1041.txt","url":"http://localhost:8888/files/eula.1041.txt","line":4,"word":9}

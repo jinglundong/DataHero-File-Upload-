@@ -38,13 +38,13 @@ $(function () {
 	//  settings:
 	$('#fileupload').fileupload('option', {
 	    url: 'http://localhost:8888',
-	    maxFileSize: 1*1024*1024*1024,  //1GB	    
+	    maxFileSize: 5*1024*1024,  //5MB	    
       acceptFileTypes: /(\.|\/)(txt)$/i,
 	    process: [
 		{
 		    action: 'load',
 		    fileTypes: /^image\/(gif|jpeg|png)$/,
-		    maxFileSize: 1*1024*1024*1024,  //1GB	 
+		    maxFileSize: 5*1024*1024,  //5MB	 
 		},
 		{
 		    action: 'resize',
