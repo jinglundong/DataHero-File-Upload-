@@ -1,1 +1,0 @@
-{"name":"test (1).txt","size":14,"type":"text/plain","delete_type":"DELETE","delete_url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/test%20(1).txt","url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/test%20(1).txt","line":1,"word":2}

@@ -1,0 +1,1 @@
+{"name":"eula.1040.txt","size":17734,"type":"text/plain","delete_type":"DELETE","line":111,"word":1374,"topfive":["and","software","of","the","to"],"delete_url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/eula.1040.txt","url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/eula.1040.txt"}

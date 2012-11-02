@@ -1,0 +1,1 @@
+{"name":"email.txt","size":77,"type":"text/plain","delete_type":"DELETE","line":8,"word":11,"topfive":["mlang@erac.com","home:","8511","6165","tom"],"delete_url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/email.txt","url":"http://ec2-107-22-110-147.compute-1.amazonaws.com:8888/files/email.txt"}

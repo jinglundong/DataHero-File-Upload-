@@ -209,16 +209,17 @@
             <td class="preview">{% if (file.thumbnail_url) { %}
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
             {% } %}</td>
-            <td class="name">
+                        <td class="name">
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
             </td>
-            <td class="line"><span>Line:{%=file.line%}</span></td>
-            <td class="word"><span>Word:{%=file.word%}</span></td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="line_word"><span>Line:{%=file.line%}, Word:{%=file.word%}</span></td>
+            <td class="top5"><span>Top 5: {%=file.topfive[0]%}, {%=file.topfive[1]%}, 
+                {%=file.topfive[2]%}, {%=file.topfive[3]%}, {%=file.topfive[4]%}</span></td>
             <td colspan="2"></td>
         {% } %}
         <td class="delete">
-            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+<button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                 <i class="icon-trash icon-white"></i>
                 <span>Delete</span>
             </button>
