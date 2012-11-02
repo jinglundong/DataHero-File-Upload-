@@ -1,0 +1,119 @@
+//============================================================================
+// Name        : topfive.cpp
+// Author      : Jinglun Dong
+// Version     : cpp0.0.1
+// Copyright   : MIT License
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <hash_map>
+#include <sstream>
+#include <queue>
+
+using namespace __gnu_cxx;
+using namespace std;
+
+class Entry{
+public:
+	string key;
+	int value;
+	Entry(string k, int v){
+		key = k;
+		value = v;
+	}
+};
+
+struct compare
+{
+  bool operator()(const Entry& l, const Entry& r)
+  {
+      return l.value > r.value;
+  }
+};
+
+namespace __gnu_cxx {
+	template<> struct hash<string> {
+	  size_t operator()(const string& k) const {
+		size_t hashval = 0;
+		for (int i = 0; i < k.size(); ++i) {
+		  hashval = 5 * hashval + k.at(i);
+		}
+		return hashval;
+	  }
+	};
+}
+
+int main(int argc, char* args[]) {
+	typedef __gnu_cxx::hash_map<string,int> WordTable;
+	long lineCount = 0;
+	long wordCount = 0;
+	WordTable wordTable;
+	hash_map<string, int>::iterator it;
+	priority_queue<Entry,vector<Entry>, compare > topFive;
+	if (argc != 2){
+		cout << "Usage: ./a.out <fileName>.";
+	}
+	else{
+		string line;
+		string word;
+		string sub;
+		ifstream myfile (args[1]);
+		if (myfile.is_open()){
+			while ( myfile.good() ){
+				getline (myfile,line);
+				lineCount++;
+				istringstream iss(line);
+				while(iss){
+					iss >> sub;
+					if (!sub.empty()){
+						it = wordTable.find(sub);
+						if (it != wordTable.end()){
+							it->second++;
+						}
+						else{
+							wordTable.insert(std::pair<string,int>(sub,1));
+						}
+						wordCount++;
+						sub.clear();
+					}
+				}
+			}
+			myfile.close();
+			lineCount--;
+
+			//compute the top five words respect to frequency.
+			for(hash_map<string,int>::iterator it = wordTable.begin(); it != wordTable.end(); it ++){
+				if (topFive.size()<5){
+					topFive.push(Entry(it->first, it->second));
+				}
+				else{
+					if (it->second > topFive.top().value){
+						topFive.pop();
+						topFive.push(Entry(it->first, it->second));
+					}
+				}
+			}
+			cout << "  " << lineCount << "  " << wordCount <<" ";
+			int topFiveSize = topFive.size();
+			while(topFive.size() != 0){
+				cout << topFive.top().key << " ";
+				topFive.pop();
+			}
+			while(topFiveSize != 5){
+				cout << "NULL ";
+				topFiveSize++;
+			}
+			cout << endl;
+		}
+		else{
+			cout << "Unable to open file" << "\nCurrent directory:" << args[0];
+		}
+	}
+	return 0;
+	int a;
+	cin >> a;
+}
+

@@ -117,8 +117,8 @@
         <ul>
             <li>The maximum file size for uploads in this demo is <strong>1 GB</strong>.</li>
             <li>Only text files (<strong>.txt</strong>) are allowed in this demo.</li>
-            <li>Uploaded files will be saved on /server/node/public/files.</li>
-            <li>The metadata of uploaded files will be saved on /server/node/public/meta as JSON format.</li>
+            <li>Uploaded files will be saved on /public/files.</li>
+            <li>The metadata of uploaded files will be saved on /public/meta as JSON format.</li>
             <li>jQuery.tmpl() is used to update the content on index page.</li>                        
             <li>Ajax is used to update the browse view.</li>
             <li>Please run on Node.js version 0.8.14 or compatible version.
@@ -161,9 +161,6 @@
 <style>
 .fileupload-buttonbar {
     visibility:hidden;
-}
-.delete{
-display:none;
 }
 </style>
 
@@ -214,9 +211,10 @@ display:none;
             <td class="name">
                 <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
             </td>
-            <td class="line"><span>Line:{%=file.line%}</span></td>
-            <td class="word"><span>Word:{%=file.word%}</span></td>
             <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="line_word"><span>Line:{%=file.line%}, Word:{%=file.word%}</span></td>
+            <td class="top5"><span>Top 5: {%=file.topfive[0]%}, {%=file.topfive[1]%}, 
+                {%=file.topfive[2]%}, {%=file.topfive[3]%}, {%=file.topfive[4]%}</span></td>
             <td colspan="2"></td>
         {% } %}
         <td class="delete">
