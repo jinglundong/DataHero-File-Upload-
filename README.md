@@ -4,6 +4,7 @@
     Jinglun Dong 
 
 ## Version
++    v0.2.1 Fixed a bug related to regular expression. Fixed a bug when input file is less than 5 words.
 +    v0.2.0 Implemented the five most frequent words function. Rewrite the line and word count using Node.js.
 +    v0.1.1 If there is no file information update, there is no content reload on browse view.
 +    v0.1.0 Added "delete button" back to browse view. Deactivate the ajax call when load index view first time. 

@@ -261,7 +261,7 @@
             var words;         
             var wordMap = new HashMap();
             for (var i=0; i<dataSplited.length; i++){
-                words = dataSplited[i].match(/\w+\S+/g);
+                words = dataSplited[i].match(/\S+/g);
                 if (words){
                     for (var j=0; j<words.length; j++){
                         if (wordMap.get(words[j])){     //hit
@@ -277,7 +277,8 @@
             //use min heap to track the top five frequent words
             var heap = [];
             for (var rawWord in wordMap._data){
-                var word = rawWord.replace('"','');        
+                var word = rawWord.replace('"','');       
+            console.log(JSON.stringify(word));
                 if (heap.length <5){            //has empty slot
                     var pair = new Object();
                     pair.word = word;
@@ -295,9 +296,14 @@
                     }
                 }                                    
             }
+
             //push top five words to fileInfo
             for (var i=0; i<heap.length; i++){
                 fileInfo.topfive.push(heap[i].word.replace(/\u0000/g,''));
+            }
+            //fill empty slot with "NULL", if total words apeared are less than 5. 
+            while(fileInfo.topfive.length < 5){
+                fileInfo.topfive.push("NULL");
             }
             fs.writeFile(options.metadataDir + '/' + fileInfo.name, 
                         JSON.stringify(fileInfo), function (err) {
