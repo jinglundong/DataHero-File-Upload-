@@ -1,1 +1,0 @@
-{"name":"eula.1028.txt","size":17734,"type":"text/plain","delete_type":"DELETE","line":111,"word":1374,"topfive":["and","software","of","the","to"],"delete_url":"http://localhost:8888/files/eula.1028.txt","url":"http://localhost:8888/files/eula.1028.txt"}

@@ -33,9 +33,9 @@
             uploadDir: __dirname + '/public/files',
             metadataDir: __dirname + '/public/meta',
             uploadUrl: '/files/',
-            maxPostSize: 5*1024*1024, // 5 MB
+            maxPostSize: 1*1024*1024*1024, // 1 GB
             minFileSize: 1,
-            maxFileSize: 5*1024*1024, // 5 MB
+            maxFileSize: 1*1024*1024*1024, // 1 GB
             acceptFileTypes: /\.+(txt)/i,
             // Files not matched by this regular expression force a download dialog,
             // to prevent executing any scripts in the context of the service domain:
@@ -357,22 +357,25 @@
                 return;
             }
             fs.renameSync(file.path, options.uploadDir + '/' + fileInfo.name); 
-            fs.writeFile(options.metadataDir + '/' + fileInfo.name, JSON.stringify(fileInfo), function(err){
-                if (err) throw err;
-            });
-            if (options.imageTypes.test(fileInfo.name)) {
-                Object.keys(options.imageVersions).forEach(function (version) {
-                    counter += 1;
-                    var opts = options.imageVersions[version];
-                    imageMagick.resize({
-                        width: opts.width,
-                        height: opts.height,
-                        srcPath: options.uploadDir + '/' + fileInfo.name,
-                        dstPath: options.uploadDir + '/' + version + '/' +
-                            fileInfo.name
-                    }, finish());
+             //Check if directory exsit.
+            fs.mkdir(options.metadataDir, function(){
+                fs.writeFile(options.metadataDir + '/' + fileInfo.name, JSON.stringify(fileInfo), function(err){
+                    if (err) throw err;
                 });
-            }
+                if (options.imageTypes.test(fileInfo.name)) {
+                    Object.keys(options.imageVersions).forEach(function (version) {
+                        counter += 1;
+                        var opts = options.imageVersions[version];
+                        imageMagick.resize({
+                            width: opts.width,
+                            height: opts.height,
+                            srcPath: options.uploadDir + '/' + fileInfo.name,
+                            dstPath: options.uploadDir + '/' + version + '/' +
+                                fileInfo.name
+                        }, finish());
+                    });
+                }
+            });
 
         }).on('aborted', function () {
             tmpFiles.forEach(function (file) {
