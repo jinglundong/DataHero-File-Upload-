@@ -278,7 +278,6 @@
             var heap = [];
             for (var rawWord in wordMap._data){
                 var word = rawWord.replace('"','');       
-            console.log(JSON.stringify(word));
                 if (heap.length <5){            //has empty slot
                     var pair = new Object();
                     pair.word = word;
